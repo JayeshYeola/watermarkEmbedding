@@ -35,6 +35,7 @@ def ReadWatermarkImage():
             y += 1
         x += 1
     print len(T)
+    return T
 
 
 def ReadHostImage():
@@ -86,10 +87,13 @@ def GenScrambledWatermark():
             y += 1
         x += 1
     print(Bw)
+    return Bw
 
 
 def DWTofImage():
     coeffs = pywt.dwt2(C, 'haar')
+    print "coeff"
+    print coeffs
     cA, (cH, cV, cD) = coeffs
     print cA
     print '------------------------------------------'
@@ -102,6 +106,7 @@ def DWTofImage():
     '''| cA(LL) | cH(LH) |
     | cV(HL) | cD(HH)
     '''
+    return cA
 
 
 RSAEncryption(X, u)
