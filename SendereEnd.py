@@ -108,10 +108,10 @@ def DWTofImage():
     '''
     return cA
 
-
-RSAEncryption(X, u)
-ReadWatermarkImage()
-ReadHostImage()
-GenerateScramblingSequence()
-GenScrambledWatermark()
-DWTofImage()
+def main():
+    RSAEncryption(X, u)
+    ReadWatermarkImage()
+    ReadHostImage()
+    GenerateScramblingSequence()
+    GenScrambledWatermark()
+    DWTofImage()
