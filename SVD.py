@@ -1,6 +1,7 @@
 from scipy import linalg
 import SendereEnd
 import numpy
+import pywt
 
 LL = SendereEnd.main()
 # LL=SendereEnd.DWTofImage()
@@ -26,4 +27,16 @@ Snew=Sc+Alpha*Wfinal
 print '------------------------------------------------'
 print Snew
 Uw,Sw,Vw = linalg.svd(Snew)
-LLnew = linalg
+Temp = Uc.dot(Sw)
+print 'Temp Shape is :', Temp.shape
+Vcdash = Vc.transpose()
+print 'Vcdash shape is :', Vcdash.shape,  type(Vcdash)
+LLnew = Temp.dot(Vcdash)
+print '------------------------------------------------'
+# print LLnew
+cH = SendereEnd.cHH
+print cH
+coeffs = (LLnew, cH, SendereEnd.cVV, SendereEnd.cDD)
+print coeffs
+iamge = pywt.idwt2(coeffs,'haar')
+

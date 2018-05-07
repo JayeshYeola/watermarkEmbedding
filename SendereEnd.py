@@ -13,6 +13,9 @@ C = numpy.ndarray(62500)    # Host Image
 Bw = numpy.ndarray(62500)   # Watermark
 C.shape = (250,250)
 Bw.shape = (250,250)
+cHH = numpy.ndarray(125*125)
+cVV = numpy.ndarray(125*125)
+cDD = numpy.ndarray(125*125)
 
 def RSAEncryption(X,u):
     (pubkey,privkey) = rsa.newkeys(512)
@@ -93,15 +96,19 @@ def GenScrambledWatermark():
 def DWTofImage():
     coeffs = pywt.dwt2(C, 'haar')
     print "coeff"
-    # print coeffs
+    print coeffs
     cA, (cH, cV, cD) = coeffs
-    print cA
+    cHH = cH
+    cVV = cV
+    cDD = cD
+    print type(cA)
     print '------------------------------------------'
-    print cH
+    print type(cH)
     print '------------------------------------------'
-    print cV
+    # print cV
+    print type(cV)
     print '------------------------------------------'
-    print cD
+    print type(cD)
     print '------------------------------------------'
     '''| cA(LL) | cH(LH) |
     | cV(HL) | cD(HH)
