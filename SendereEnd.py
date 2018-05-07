@@ -13,9 +13,12 @@ C = numpy.ndarray(62500)    # Host Image
 Bw = numpy.ndarray(62500)   # Watermark
 C.shape = (250,250)
 Bw.shape = (250,250)
-cHH = numpy.ndarray(125*125)
-cVV = numpy.ndarray(125*125)
-cDD = numpy.ndarray(125*125)
+# cHH = numpy.ndarray(125*125)
+# cHH.shape = (125,)
+# cVV = numpy.ndarray(125*125)
+# cVV.shape = (125,)
+# cDD = numpy.ndarray(125*125)
+# cDD.shape = (125,)
 
 def RSAEncryption(X,u):
     (pubkey,privkey) = rsa.newkeys(512)
@@ -98,9 +101,9 @@ def DWTofImage():
     print "coeff"
     print coeffs
     cA, (cH, cV, cD) = coeffs
-    cHH = cH
-    cVV = cV
-    cDD = cD
+    # cHH = cH
+    # cVV = cV
+    # cDD = cD
     print type(cA)
     print '------------------------------------------'
     print type(cH)
@@ -113,7 +116,7 @@ def DWTofImage():
     '''| cA(LL) | cH(LH) |
     | cV(HL) | cD(HH)
     '''
-    return cA
+    return coeffs
 
 def main():
     RSAEncryption(X, u)
@@ -121,5 +124,5 @@ def main():
     ReadHostImage()
     GenerateScramblingSequence()
     GenScrambledWatermark()
-    cA = DWTofImage()
-    return cA
+    coeffs = DWTofImage()
+    return coeffs
