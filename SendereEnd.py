@@ -10,7 +10,7 @@ alpha = 68  # Amplification Factor
 beta = 37   # Amplification Factor
 B = []      # Scrambled Watermark
 C = numpy.ndarray(62500)    # Host Image
-Bw = numpy.ndarray(62500,type([0,1,2]))   # Watermark
+Bw = numpy.ndarray(62500)   # Watermark
 C.shape = (250,250)
 Bw.shape = (250,250)
 
@@ -18,9 +18,9 @@ def RSAEncryption(X,u):
     (pubkey,privkey) = rsa.newkeys(512)
     message = str(X[0])+' '+str(u)
     R = rsa.encrypt(message, pubkey)
-    print "Encrypted Scrambling Parameters :" + R
+    # print "Encrypted Scrambling Parameters :" + R
     decrypt = rsa.decrypt(R, privkey)
-    print decrypt
+    # print decrypt
 
 
 def ReadWatermarkImage():
@@ -31,7 +31,7 @@ def ReadWatermarkImage():
     while x < 250:
         y = 0
         while y < 250:
-            T.append(pix[x,y])
+            T.append(pix[x,y][0])
             y += 1
         x += 1
     print len(T)
@@ -73,7 +73,7 @@ def GenScrambledWatermark():
     while i < len(T):
         # print(X[i])
         # print (X[i] ^ T[i][0])
-        element = [X[i] ^ T[i][0], X[i] ^ T[i][1], X[i] ^ T[i][2]]
+        element = X[i] ^ T[i] # [0], X[i] ^ T[i][1], X[i] ^ T[i][2]]
         B.append(element)
         i += 1
     x = 0
@@ -86,14 +86,14 @@ def GenScrambledWatermark():
             count += 1
             y += 1
         x += 1
-    print(Bw)
+    # print(Bw)
     return Bw
 
 
 def DWTofImage():
     coeffs = pywt.dwt2(C, 'haar')
     print "coeff"
-    print coeffs
+    # print coeffs
     cA, (cH, cV, cD) = coeffs
     print cA
     print '------------------------------------------'
@@ -114,4 +114,5 @@ def main():
     ReadHostImage()
     GenerateScramblingSequence()
     GenScrambledWatermark()
-    DWTofImage()
+    cA = DWTofImage()
+    return cA
