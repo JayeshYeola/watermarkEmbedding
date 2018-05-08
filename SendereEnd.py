@@ -4,9 +4,9 @@ import pywt
 import numpy
 
 T = []      # WaterMarked Image
-X = [0.47]  # Random Scrambling Sequence
+X = [0.24]  # Random Scrambling Sequence
 u = 3.72    # System Parameter for Scrambling
-alpha = 68  # Amplification Factor
+alpha = 71  # Amplification Factor
 beta = 37   # Amplification Factor
 B = []      # Scrambled Watermark
 C = numpy.ndarray(62500)    # Host Image
@@ -24,13 +24,16 @@ def RSAEncryption(X,u):
 
 
 def ReadWatermarkImage():
-    im = Image.open('watermark.png')  # Can be many different formats.
+    im = Image.open('whatermark2.png')  # Can be many different formats.
     pix = im.load()
+    ht,wdt = im.size
+    print ht, wdt
     x = 0
     y = 0
-    while x < 250:
+    while x < ht:
         y = 0
-        while y < 250:
+        while y < wdt:
+            # print pix[x,y]
             T.append(pix[x,y][0])
             y += 1
         x += 1
@@ -43,14 +46,22 @@ def ReadHostImage():
     pix = hm.load()
     x = 0
     y = 0
-    while x < 250:
+    ht, wdt = hm.size
+    print ht, wdt
+    Temp = numpy.ndarray(ht*wdt)
+    Temp.shape = (ht,wdt)
+    # C.resize(Temp.size)
+    # C.reshape(Temp.shape)
+    # print C.shape, C.size
+    while x < ht:
         y = 0
-        while y < 250:
-            C[x,y] = pix[x, y][0]  # pix[x,y]
+        while y < wdt:
+            Temp[x, y] = pix[x, y][0]  # pix[x,y]
             # C.append(pix[x,y])
             y += 1
         x += 1
-    print len(C)
+    # print Temp
+    print len(Temp)
 
 def GenerateScramblingSequence():
     i = 1
@@ -70,43 +81,48 @@ def GenerateScramblingSequence():
 
 def GenScrambledWatermark():
     i = 0
+    im = Image.open('whatermark2.png')  # Can be many different formats.
+    pix = im.load()
+    x = 0
+    y = 0
+    ht, wdt = im.size
+    print ht, wdt
+    Temp2 = numpy.ndarray(ht*wdt)
+    Temp2.shape = (ht,wdt)
     while i < len(T):
         # print(X[i])
         # print (X[i] ^ T[i][0])
         element = X[i] ^ T[i] # [0], X[i] ^ T[i][1], X[i] ^ T[i][2]]
+        # print element, X[i], T[i]
         B.append(element)
         i += 1
     x = 0
     y = 0
     count = 0
-    while x < 250:
+    hm2 = Image.new(im.mode,im.size)
+    pixil = hm2.load()
+    while x < ht:
         y = 0
-        while y < 250:
-            Bw[x,y] = B[count]
+        while y < wdt:
+            # Bw[x,y] = B[count]
+            pixil[x,y] = tuple([B[count],B[count],B[count]])
             count += 1
             y += 1
         x += 1
     # print(Bw)
-    return Bw
+    hm2.save('updated_watermark.png')
+    return Temp2
 
 
 def DWTofImage():
     coeffs = pywt.dwt2(C, 'haar')
     print "coeff"
     # print coeffs
-    cA, (cH, cV, cD) = coeffs
-    print cA
-    print '------------------------------------------'
-    print cH
-    print '------------------------------------------'
-    print cV
-    print '------------------------------------------'
-    print cD
-    print '------------------------------------------'
+    #     cA, (cH, cV, cD) = coeffs
     '''| cA(LL) | cH(LH) |
     | cV(HL) | cD(HH)
     '''
-    return cA
+    return coeffs
 
 def main():
     RSAEncryption(X, u)
@@ -114,5 +130,5 @@ def main():
     ReadHostImage()
     GenerateScramblingSequence()
     GenScrambledWatermark()
-    cA = DWTofImage()
-    return cA
+    coeff = DWTofImage()
+    return coeff
